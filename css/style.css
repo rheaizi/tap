@@ -162,7 +162,7 @@ h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight: 400;}
 .secondBlock{
     margin-top: -100px;
     height: 200px;
-    background: url('../img/clouds.png') repeat-x; 
+    background: url('../img/cloud1.svg') repeat-x;
 }
 
 .info {

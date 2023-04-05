@@ -5,12 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/play.css">
     <title>Circles with Words</title>
+    <script src="./script/script.js"></script>
   </head>
-  <body>
+  <body onload="currentGroup()">
     <div class="im">
       <a href="index.html">
         <img class="ima" src="img/prev.png" alt=""> 
       </a>
+
+
+      <p class="group"></p>
+
+
     </div>
     <div class="circle">
       <div class="word"></div>
@@ -18,10 +24,19 @@
     <div id="counter">Count: 0</div>
     <div id="timer">Time: </div>
     <div id="buttons">
-      <button id="not-found">Таппады</button>
-      <button id="found">Тапты</button>
+      <button onclick="calcScore(-1)" id="not-found">Таппады</button>
+      <button onclick="calcScore(1)" id="found">Тапты</button>
     </div>
     <script>
+
+      let score = 0
+
+      function calcScore(val) {
+        score += val;
+        if(score < 0) score = 0
+
+      }
+
       async function loadWords() {
         const response = await fetch('words.txt');
         const text = await response.text();
@@ -56,6 +71,18 @@
           if (timeLeft === 0) {
             localStorage.setItem('score', count);
             localStorage.setItem('notFoundWords', JSON.stringify(notFoundWords));
+            let currentGroupName = document.querySelector(".group").textContent;
+            //top1
+            if(currentGroupName === sessionStorage.getItem('top1')) {
+             sessionStorage.setItem('score1',
+               (parseInt(sessionStorage.getItem('score1')) + score).toString())
+            } else {
+              //top2
+              sessionStorage.setItem('score2',
+                (parseInt(sessionStorage.getItem('score2')) + score).toString())
+            }
+
+
             window.location.href = 'rating.html';
           }
         }, 1000);
@@ -65,6 +92,16 @@
         if (currentIndex >= words.length) {
           localStorage.setItem('score', count);
           localStorage.setItem('notFoundWords', JSON.stringify(notFoundWords));
+          let currentGroupName = document.querySelector(".group").textContent;
+          //top1
+          if(currentGroupName === sessionStorage.getItem('top1')) {
+            sessionStorage.setItem('score1',
+              (parseInt(sessionStorage.getItem('score1')) + score).toString())
+          } else {
+            //top2
+            sessionStorage.setItem('score2',
+              (parseInt(sessionStorage.getItem('score2')) + score).toString())
+          }
           window.location.href = 'rating.html';
           return;
         }
@@ -99,11 +136,21 @@
           if (timeLeft === 0) {
             localStorage.setItem('score', count);
             localStorage.setItem('notFoundWords', JSON.stringify(notFoundWords));
+            let currentGroupName = document.querySelector(".group").textContent;
+            //top1
+            if(currentGroupName === sessionStorage.getItem('top1')) {
+              sessionStorage.setItem('score1',
+                (parseInt(sessionStorage.getItem('score1')) + score).toString())
+            } else {
+              //top2
+              sessionStorage.setItem('score2',
+                (parseInt(sessionStorage.getItem('score2')) + score).toString())
+            }
             window.location.href = 'rating.html';
           }
         }, 1000);
       }
-      
+
     </script>
   </body>
 </html>

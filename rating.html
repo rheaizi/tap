@@ -50,9 +50,10 @@
         background-color: #0056b3;
       }
     </style>
+    <script src="./script/script.js"></script>
   </head>
-  <body>
-    
+  <body onload="setGroupName()">
+
 
 <div class="firstBlock">
     <div class="header">
@@ -65,7 +66,7 @@
         <h1 class="rating">Рейтинг</h1>
         <div class="block">
             <div class="ratingImg">
-                <img src="crown 1.png" alt="" width="50px" heightq="50px">
+                <img src="./img/crown.svg" alt="" width="50px" height="50px">
             </div>
             <p class="ratingSum"><span id="score"></span></p>
         </div>
@@ -73,13 +74,13 @@
 
     <div class="firstGroup">
         <p class="top1">Топ 1:</p>
-        <p class="top1Name">FirstGroup</p>
-        <p class="top1Sum">0</p>
+        <p class="top1Name"></p>
+        <p class="top1Sum"></p>
     </div>
     <div class="secondGroup">
         <p class="top2">Топ 2:</p>
-        <p class="top2Name">SecondGroup</p>
-        <p class="top2Sum">0</p>
+        <p class="top2Name"></p>
+        <p class="top2Sum"></p>
     </div>
 </div> 
 
@@ -87,7 +88,7 @@
 
 <!-- <div class="groupName">Ұландар</div> -->
 <div class="start">
-    <a href="sec.html"><button class="button">Ойынды бастау</button></a>
+    <a href="play.html"><button class="button">Ойынды бастау</button></a>
 </div>
 <!-- <h1>Жинаған балл: <span id="score"></span></h1> -->
     <!-- <button onclick="window.location.href='play.html'">Play Again</button> -->
@@ -97,9 +98,9 @@
           .then(content => {
             const words = content.split('\n');
             const scoreEl = document.querySelector('#score');
-            const score = localStorage.getItem('score');
-            const len = words.length;
-            const formattedScore = ` ${score}/${len}`;
+            const score = sessionStorage.getItem('sozder');
+
+            const formattedScore = ` ${score}`;
             scoreEl.textContent = formattedScore;
             localStorage.clear();
           })

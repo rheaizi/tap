@@ -37,23 +37,25 @@ function forward() {
 
 }
 
-function setGroupName() {
+async function setGroupName() {
   let top1 = sessionStorage.getItem("top1");
   let top2 = sessionStorage.getItem("top2");
 
   //top1Sum
 
-  let score1 = parseInt(document.querySelector('.top1Sum').textContent);
-  let score2 = parseInt(document.querySelector('.top2Sum').textContent);
+  let score1 = parseInt(sessionStorage.getItem("score1"));
+  let score2 = parseInt(sessionStorage.getItem("score2"));
   let totalScore = parseInt(sessionStorage.getItem('sozder'));
+  let index = sessionStorage.getItem('index');
+  const response = await fetch('words.txt');
+  const text = await response.text();
+  const words = text.trim().split('\n');
   //TODO:
-  if(score1 >= totalScore) {
-    //winner1 redirect html
-  } else if(score2 >= totalScore) {
-    //winner2 redirect html
+  if (score1 >= totalScore || score2 >= totalScore ||
+      index >= words.length) {
+    window.location.href = 'final.html';
+    return;
   }
-
-
   document.querySelector('.top1Name').innerHTML = top1;
   document.querySelector('.top2Name').innerHTML = top2;
   document.querySelector('.top1Sum').innerHTML = sessionStorage.getItem('score1');
@@ -62,7 +64,7 @@ function setGroupName() {
 
 function currentGroup() {
   let flip = sessionStorage.getItem('flip');
-  alert(flip)
+  document.getElementById('timer').innerHTML = sessionStorage.getItem('time') + ' секунд қалды'
   if(flip === 'group1') {
     document.querySelector('.group').innerHTML = sessionStorage.getItem("top1");
     sessionStorage.setItem('flip', 'group2');

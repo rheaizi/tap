@@ -21,8 +21,8 @@
     <div class="circle">
       <div class="word"></div>
     </div>
-    <div id="counter">Count: 0</div>
-    <div id="timer">Time: </div>
+    <div id="counter">Тапқан сөздер саны: 0</div>
+    <div id="timer"></div>
     <div id="buttons">
       <button onclick="calcScore(-1)" id="not-found">Таппады</button>
       <button onclick="calcScore(1)" id="found">Тапты</button>
@@ -41,7 +41,7 @@
         const response = await fetch('words.txt');
         const text = await response.text();
         const words = text.trim().split('\n');
-        shuffleArray(words);
+        // shuffleArray(words);
         return words;
       }
 
@@ -54,7 +54,8 @@
 
       // Game logic
       let words, currentIndex = 0, count = 0, notFoundWords = [];
-      let timeLeft = 50;
+      let timeLeft = parseInt(sessionStorage.getItem('time'));
+
       const wordEl = document.querySelector('.word');
       const foundBtn = document.querySelector('#found');
       const notFoundBtn = document.querySelector('#not-found');
@@ -67,19 +68,24 @@
         showNextWord();
         setInterval(() => {
           timeLeft--;
-          timerEl.textContent = 'Time: ' + timeLeft;
+          timerEl.textContent = timeLeft + " секунд қалды";
           if (timeLeft === 0) {
-            localStorage.setItem('score', count);
-            localStorage.setItem('notFoundWords', JSON.stringify(notFoundWords));
+            // localStorage.setItem('score', count);
+            // localStorage.setItem('notFoundWords', JSON.stringify(notFoundWords));
             let currentGroupName = document.querySelector(".group").textContent;
             //top1
             if(currentGroupName === sessionStorage.getItem('top1')) {
              sessionStorage.setItem('score1',
-               (parseInt(sessionStorage.getItem('score1')) + score).toString())
+               (parseInt(sessionStorage.getItem('score1')) + score).toString());
+
+              counterEl.textContent = 'Тапқан сөздер саны: ' + sessionStorage.getItem('score1');
+
             } else {
               //top2
               sessionStorage.setItem('score2',
                 (parseInt(sessionStorage.getItem('score2')) + score).toString())
+              counterEl.textContent = 'Тапқан сөздер саны: ' + sessionStorage.getItem('score2');
+
             }
 
 
@@ -89,34 +95,56 @@
       }
 
       function showNextWord() {
+        currentIndex = parseInt(sessionStorage.getItem('index'))
         if (currentIndex >= words.length) {
-          localStorage.setItem('score', count);
-          localStorage.setItem('notFoundWords', JSON.stringify(notFoundWords));
+          // localStorage.setItem('score', count);
+          // localStorage.setItem('notFoundWords', JSON.stringify(notFoundWords));
           let currentGroupName = document.querySelector(".group").textContent;
           //top1
           if(currentGroupName === sessionStorage.getItem('top1')) {
             sessionStorage.setItem('score1',
               (parseInt(sessionStorage.getItem('score1')) + score).toString())
+            counterEl.textContent = 'Тапқан сөздер саны: ' + sessionStorage.getItem('score1');
           } else {
             //top2
             sessionStorage.setItem('score2',
-              (parseInt(sessionStorage.getItem('score2')) + score).toString())
+              (parseInt(sessionStorage.getItem('score2')) + score).toString());
+            counterEl.textContent = 'Тапқан сөздер саны: ' + sessionStorage.getItem('score2');
           }
           window.location.href = 'rating.html';
           return;
         }
-        wordEl.textContent = words[currentIndex];
-        currentIndex++;
+        let idx = parseInt(sessionStorage.getItem('index'))
+        wordEl.textContent = words[idx];
+        sessionStorage.setItem('index', (idx + 1).toString());
+
       }
       
       function foundWord() {
         count++;
-        counterEl.textContent = 'Count: ' + count;
+        // let currentGroup = document.querySelector(".group").textContent;
+        // let cnt = 0;
+        // if(currentGroup === sessionStorage.getItem('top1')) {
+        //   cnt = sessionStorage.getItem('score1')
+        // } else {
+        //   cnt = sessionStorage.getItem('score2')
+        // }
+        counterEl.textContent = 'Тапқан сөздер саны: ' + count;
         showNextWord();
       }
 
       function notFoundWord() {
         notFoundWords.push(words[currentIndex - 1]);
+        count--;
+        // let currentGroup = document.querySelector(".group").textContent;
+        // let cnt = 0;
+        // if(currentGroup === sessionStorage.getItem('top1')) {
+        //   cnt = sessionStorage.getItem('score1')
+        // } else {
+        //   cnt = sessionStorage.getItem('score2')
+        // }
+        if(count < 0) count = 0;
+        counterEl.textContent = 'Тапқан сөздер саны: ' + count;
         showNextWord();
       }
       
@@ -127,24 +155,30 @@
 
       async function init() {
         words = await loadWords();
+
         showNextWord();
-        const storedTime = localStorage.getItem('time');
-        timeLeft = storedTime ? parseInt(storedTime) : 50; // use stored time if available, otherwise use default value of 50
+        const storedTime = sessionStorage.getItem('time');
+        timeLeft = parseInt(storedTime); // use stored time if available, otherwise use default value of 50
         setInterval(() => {
           timeLeft--;
-          timerEl.textContent = 'Time: ' + timeLeft;
+          timerEl.textContent = timeLeft + " секунд қалды";
           if (timeLeft === 0) {
-            localStorage.setItem('score', count);
-            localStorage.setItem('notFoundWords', JSON.stringify(notFoundWords));
+            // localStorage.setItem('score', count);
+            // localStorage.setItem('notFoundWords', JSON.stringify(notFoundWords));
             let currentGroupName = document.querySelector(".group").textContent;
             //top1
             if(currentGroupName === sessionStorage.getItem('top1')) {
               sessionStorage.setItem('score1',
-                (parseInt(sessionStorage.getItem('score1')) + score).toString())
+                (parseInt(sessionStorage.getItem('score1')) + score).toString());
+              counterEl.textContent = 'Тапқан сөздер саны: ' + sessionStorage.getItem('score1');
+
+
             } else {
               //top2
               sessionStorage.setItem('score2',
-                (parseInt(sessionStorage.getItem('score2')) + score).toString())
+                (parseInt(sessionStorage.getItem('score2')) + score).toString());
+              counterEl.textContent = 'Тапқан сөздер саны: ' + sessionStorage.getItem('score2');
+
             }
             window.location.href = 'rating.html';
           }
